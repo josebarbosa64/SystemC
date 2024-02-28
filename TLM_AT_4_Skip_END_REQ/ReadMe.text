@@ -1,2 +1,0 @@
-This example shows the two ways how the END_REQ phase can be skipped. Please
-study the code by following the Skip END_REQ paths in Figure 1.
