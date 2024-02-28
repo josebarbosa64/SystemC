@@ -1,0 +1,1 @@
+/usr/bin/c++ CMakeFiles/ams-tdf.dir/tdf.cpp.o -o ams-tdf  -Wl,-rpath,/opt/systemc/lib-linux64 /opt/systemc/lib-linux64/libsystemc.so 

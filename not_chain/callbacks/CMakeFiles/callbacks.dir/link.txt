@@ -1,0 +1,1 @@
+/usr/bin/c++ CMakeFiles/callbacks.dir/main.cpp.o -o callbacks  -Wl,-rpath,/opt/systemc/lib-linux64 /opt/systemc/lib-linux64/libsystemc.so 

@@ -1,0 +1,1 @@
+/usr/bin/c++ CMakeFiles/custom_fifo.dir/main.cpp.o -o custom_fifo  -Wl,-rpath,/opt/systemc/lib-linux64 /opt/systemc/lib-linux64/libsystemc.so 

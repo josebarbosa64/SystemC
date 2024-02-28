@@ -1,0 +1,1 @@
+/usr/bin/c++ CMakeFiles/thread_example.dir/thread_example.cpp.o -o thread_example  -Wl,-rpath,/opt/systemc/lib-linux64 /opt/systemc/lib-linux64/libsystemc.so 

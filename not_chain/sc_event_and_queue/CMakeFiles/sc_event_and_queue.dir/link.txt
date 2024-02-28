@@ -1,0 +1,1 @@
+/usr/bin/c++ CMakeFiles/sc_event_and_queue.dir/main.cpp.o -o sc_event_and_queue  -Wl,-rpath,/opt/systemc/lib-linux64 /opt/systemc/lib-linux64/libsystemc.so 

@@ -1,0 +1,1 @@
+/usr/bin/c++ CMakeFiles/clock_generator.dir/main.cpp.o -o clock_generator  -Wl,-rpath,/opt/systemc/lib-linux64 /opt/systemc/lib-linux64/libsystemc.so 

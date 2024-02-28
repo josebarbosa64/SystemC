@@ -1,0 +1,1 @@
+/usr/bin/c++ CMakeFiles/tlm_multipasstrough_sockets.dir/main.cpp.o CMakeFiles/tlm_multipasstrough_sockets.dir/__/tlm_memory_manager/memory_manager.cpp.o -o tlm_multipasstrough_sockets  -Wl,-rpath,/opt/systemc/lib-linux64 /opt/systemc/lib-linux64/libsystemc.so 
