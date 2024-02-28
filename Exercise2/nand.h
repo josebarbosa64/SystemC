@@ -6,8 +6,7 @@
 SC_MODULE(nand)
 {
     public:
-    sc_in<bool> A;
-    sc_in<bool> B;
+    sc_in<bool> A, B;
     sc_out<bool> Z;
 
     SC_CTOR(nand): A("A"), B("B"), Z("Z")

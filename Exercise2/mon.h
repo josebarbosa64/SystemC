@@ -14,8 +14,8 @@ public:
     {
         std::cout << std::endl <<  "time\tA\tB\tF" << std::endl;
         SC_METHOD(monitor);
-        //sensitive << A << B << Z;
-        sensitive << Clk;
+        //sensitive << A << B << Z;  //---- Not task4
+        sensitive << Clk.pos();  //----Task4
         dont_initialize();
     }
 
