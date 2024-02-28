@@ -42,6 +42,7 @@ SC_MODULE(NOT)
     SC_CTOR(NOT) : in("in"), out("out")
     {
         SC_METHOD(process);
+        sensitive << in;
     }
 
     void process()
