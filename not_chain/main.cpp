@@ -59,7 +59,8 @@ SC_MODULE(not_chain)
     NOT not3;
     NOT not2;
 
-    sc_signal<bool> h1,h2;
+    sc_signal<bool> h1;
+    sc_signal<bool>h2;
 
     SC_CTOR(not_chain):
         A("A"), Z("Z"),
