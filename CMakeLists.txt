@@ -59,4 +59,17 @@ add_subdirectory(tlm_payload_extensions)
 add_subdirectory(tlm_protocol_checker)
 add_subdirectory(tlm_quantum_keeper)
 add_subdirectory(tlm_simple_sockets)
+<<<<<<< HEAD
 
+=======
+add_subdirectory(ams-eln)
+add_subdirectory(ams-eln2)
+add_subdirectory(ams-tdf)
+add_subdirectory(ams-tdf2)
+add_subdirectory(ams-lsf)
+add_subdirectory(ams-lsf2)
+add_subdirectory(Exercise2)
+#add_subdirectory(Exercise3)
+#add_subdirectory(Exercise4)
+#add_subdirectory(Exercise5)
+>>>>>>> refs/remotes/origin/main

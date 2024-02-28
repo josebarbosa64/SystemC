@@ -12,7 +12,7 @@ public:
     SC_CTOR(stim)
     {
         SC_THREAD(StimGen);
-        sensitive << Clk;  //---Task 4
+        sensitive << Clk.pos();  //---Task 4
     }
 
 private:
