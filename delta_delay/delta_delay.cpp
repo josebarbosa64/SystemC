@@ -74,7 +74,7 @@ SC_MODULE(toplevel)
         rs.N(Nsig);
 
         std::cout << "\nS=0, R=1, Q=0, N=1\n" << std::endl;
-        Ssig.write(false);
+        Ssig.write(false); // initial values
         Rsig.write(true);
         Qsig.write(false);
         Nsig.write(true);
