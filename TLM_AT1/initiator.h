@@ -31,7 +31,7 @@
  *     - Matthias Jung
  */
 
-#ifndef INITIATOR_H
+#ifndef INITIATOR_H 
 #define INITIATOR_H
 #include <iomanip>
 #include <systemc>
