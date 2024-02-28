@@ -113,7 +113,7 @@ SC_MODULE(toplevel)
 
         // Set:
         std::cout << "SWAP A<->B" << std::endl;
-        startMethod1.notify();
+        startMethod1.notify(); //it uses events to trigger the proccess
         waitAndPrint(SC_ZERO_TIME);
 
         std::cout << "SWAP A<->B" << std::endl;
