@@ -55,7 +55,8 @@ SC_MODULE(not_chain)
     sc_in<bool> A;
     sc_out<bool> Z;
 
-    NOT not1, not2, not3;
+    NOT not1, not2;
+    NOT not3;
 
     sc_signal<bool> h1,h2;
 
