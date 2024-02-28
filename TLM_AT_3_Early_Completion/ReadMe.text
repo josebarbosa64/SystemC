@@ -1,0 +1,3 @@
+In this example the target ends the transaction by an early completion, which is similar
+to the b_transport of LT coding style. Please study the code by following the Early
+Completion path in Figure 1.
