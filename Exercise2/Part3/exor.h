@@ -5,7 +5,6 @@
 
 #include "nand.h"
 
-// TODO: Insert your code here
 
 SC_MODULE(exor)
 {  public:
