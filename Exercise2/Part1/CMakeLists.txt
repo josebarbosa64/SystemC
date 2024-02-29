@@ -7,8 +7,8 @@ project(Exercise2)
 # Choose "exor_main.cpp" here to test your XOR implementation.
 
 add_executable(exercise2
-    nand_main.cpp
-    #exor_main.cpp
+    #nand_main.cpp
+    exor_main.cpp
 )
 
 target_include_directories(exercise2
