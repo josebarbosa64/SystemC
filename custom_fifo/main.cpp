@@ -118,7 +118,7 @@ SC_MODULE(PRODUCER) //^ module of class c
     {
         while(true)
         {
-            wait(1,SC_NS);
+            wait(1,SC_NS); //^write something each 1 NS
             master->write(10);  //^since this module is connected to the channel.. it can use the funcitions implemented in channel
             std::cout << "@" << sc_time_stamp() << " Write: 10 ";
             master->printFIFO();
@@ -133,14 +133,14 @@ SC_MODULE(CONSUMER)
     SC_CTOR(CONSUMER)
     {
         SC_THREAD(process);
-        //sensitive << slave;  //^ each time something changes in channel.. I want to print
+        //sensitive << slave;  //^ each time something changes in channel.. I want to print nothing chances
     }
 
     void process()
     {
         while(true)
         {
-            wait(4,SC_NS);
+            wait(4,SC_NS); //^read each 4 NS
             std::cout << "@" << sc_time_stamp() << " Read : "
                       << slave->read() << " ";
             slave->printFIFO();
@@ -160,7 +160,7 @@ int sc_main(int __attribute__((unused)) argc,
     pro1.master.bind(channel);
     con1.slave.bind(channel);
 
-    sc_start(10,SC_NS);
+    sc_start(20,SC_NS);
 
     return 0;
 }

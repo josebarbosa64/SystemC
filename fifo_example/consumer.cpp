@@ -36,7 +36,7 @@
 // This method is called every clock cycle:
 void consumer::process()
 {
-    while(true)
+    while(true)  //^a thread allways go inside a while true
     {
         // Blocking read, i.e. an implicit wait is called
         unsigned int value = fifo_port->read();
