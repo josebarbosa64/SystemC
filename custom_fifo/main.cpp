@@ -33,7 +33,7 @@
 
 #include <iostream>
 #include <systemc.h>
-#include <queue>
+#include <queue> //^ to use FIFO
 
 using namespace std;
 
@@ -50,17 +50,17 @@ class SimpleFIFOInterface : public sc_interface
     }
 };
 
-template <class T>
+template <class T> //^ the FIFO memory can store a object of the class T , see instation in the main
 class SimpleFIFO : public SimpleFIFOInterface<T>
 {
     private:
-    std::queue<T> fifo;
+    std::queue<T> fifo; //^memory 
     sc_event writtenEvent;
     sc_event readEvent;
     unsigned int maxSize;
 
     public:
-    SimpleFIFO(unsigned int size=16) : maxSize(size)
+    SimpleFIFO(unsigned int size=16) : maxSize(size)  //^ in the construction it must recieve a number, size.
     {
     }
 
@@ -69,10 +69,10 @@ class SimpleFIFO : public SimpleFIFOInterface<T>
         if(fifo.empty() == true)
         {
             std::cout << "Wait for Write" << std::endl;
-            wait(writtenEvent);
+            wait(writtenEvent); //^wait until something is written
         }
-        T val = fifo.front();
-        fifo.pop();
+        T val = fifo.front(); //^take  value from the front
+        fifo.pop();//^empty that place
         readEvent.notify(SC_ZERO_TIME);
         return val;
     }
@@ -81,7 +81,7 @@ class SimpleFIFO : public SimpleFIFOInterface<T>
     {
         if(fifo.size() == maxSize)
         {
-            std::cout << "Wait for Read" << std::endl;
+            std::cout << "Wait for Read" << std::endl; //^it is full,, it has to wait until an element is read.
             wait(readEvent);
         }
         fifo.push(d);
@@ -104,9 +104,10 @@ class SimpleFIFO : public SimpleFIFOInterface<T>
     }
 };
 
-SC_MODULE(PRODUCER)
+SC_MODULE(PRODUCER) //^ module of class c
 {
-    sc_port< SimpleFIFOInterface<int> > master;
+    sc_port< SimpleFIFOInterface<int> > master; //^take from INterface...not from channel.... this connection makes the sc_module have access to the function implemented in channel
+
 
     SC_CTOR(PRODUCER)
     {
@@ -118,7 +119,7 @@ SC_MODULE(PRODUCER)
         while(true)
         {
             wait(1,SC_NS);
-            master->write(10);
+            master->write(10);  //^since this module is connected to the channel.. it can use the funcitions implemented in channel
             std::cout << "@" << sc_time_stamp() << " Write: 10 ";
             master->printFIFO();
         }
@@ -132,7 +133,7 @@ SC_MODULE(CONSUMER)
     SC_CTOR(CONSUMER)
     {
         SC_THREAD(process);
-        sensitive << slave;
+        //sensitive << slave;  //^ each time something changes in channel.. I want to print
     }
 
     void process()
@@ -152,8 +153,8 @@ int sc_main(int __attribute__((unused)) argc,
 {
     PRODUCER pro1("pro1");
     CONSUMER con1("con1");
-    SimpleFIFO<int> channel(4);
-
+    SimpleFIFO<int> channel(4); //^since the class is templated I need to specify the tipo of object I want to store in the fifo 
+                        //^ 4= size of fifo, see constructor
     sc_signal<int> foo;
 
     pro1.master.bind(channel);
