@@ -58,9 +58,10 @@ class ShortcutTarget: public Target // According to [2.0]
         {
             if(transactionInProgress) // Do a normal 4 phase handshake
             {
-                peq.notify(trans, phase, delay);
+                peq.notify(trans, phase, delay);   //^If im working in something then it means im doing regular handshake, that means im in the processing phase
             }
-            else // Perform the shortcut [2.0]
+            else // Perform the shortcut [2.0]   
+                //^jump from phase 1 to phase phase 2, dont send TLM_ACCEPT
             {
                 // Increment the transaction reference count:
                 trans.acquire();
@@ -72,7 +73,7 @@ class ShortcutTarget: public Target // According to [2.0]
 
                 // Queue internal event for begin response
                 // with internal delay:
-                targetDone.notify(delay + randomDelay());
+                targetDone.notify(delay + randomDelay());  //^ After delay method in constructor of target is called due to sensivility
 
                 transactionInProgress = &trans;
 
@@ -98,7 +99,7 @@ class ShortcutTarget: public Target // According to [2.0]
     }
 };
 
-class ShortcutInitiator: public Initiator // According to [2.1]
+class ShortcutInitiator: public Initiator //^ According to [2.1] - Inherits from tlm_1 Initiator
 {
     public:
     SC_HAS_PROCESS(ShortcutInitiator);
@@ -124,7 +125,7 @@ class ShortcutInitiator: public Initiator // According to [2.1]
                 endRequest.notify();
             }
 
-            checkTransaction(trans);
+            checkTransaction(trans);   //^verify integrity of data
 
             // Allow the MM to free the transaciton object
             trans.release();

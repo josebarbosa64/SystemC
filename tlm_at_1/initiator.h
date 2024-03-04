@@ -54,22 +54,22 @@ class Initiator: public sc_module, public tlm::tlm_bw_transport_if<>
     tlm::tlm_initiator_socket<> socket;
 
     protected:
-    MemoryManager mm;
+    MemoryManager mm;  // ^Defied by profesor
     int data[16];
-    tlm::tlm_generic_payload* requestInProgress;
+    tlm::tlm_generic_payload* requestInProgress;  // ^If I already have a pending request, then use this for backpressure
     sc_event endRequest;
     tlm_utils::peq_with_cb_and_phase<Initiator> peq;
 
     public:
     SC_CTOR(Initiator): socket("socket"),
-                        requestInProgress(0),
+                        requestInProgress(0), // ^since im only creating my Initiatior, standard value for requestInProgress is 0
                         peq(this, &Initiator::peqCallback)
     {
         socket.bind(*this);
 
-        SC_THREAD(process);
+        SC_THREAD(process);   //^execute once when I construct my object
 
-        for(int i=0; i<16; i++)
+        for(int i=0; i<16; i++)  // ^Fill data with 0s
         {
             data[i] = 0;
         }
@@ -78,21 +78,22 @@ class Initiator: public sc_module, public tlm::tlm_bw_transport_if<>
     protected:
     void process()
     {
-        tlm::tlm_generic_payload* trans;
-        tlm::tlm_phase phase;
+        tlm::tlm_generic_payload* trans;  // ^package of data
+        tlm::tlm_phase phase;      // ^in which part of the 4 handshake we are
         sc_time delay;
 
         // Generate a sequence of random transactions
         for (int i = 0; i < LENGTH; i++)
         {
-            int adr = rand();
-            tlm::tlm_command cmd = static_cast<tlm::tlm_command>(rand() % 2);
-            if (cmd == tlm::TLM_WRITE_COMMAND) data[i % 16] = adr;
+            int adr = rand();  // ^generate random address
+            tlm::tlm_command cmd = static_cast<tlm::tlm_command>(rand() % 2);  // ^if modulo of rand is 1 then READ if 0 then WRITE
+            if (cmd == tlm::TLM_WRITE_COMMAND) data[i % 16] = adr;  // ^initiator uses also the random address as the data that is sent
 
             // Grab a new transaction from the memory manager
-            trans = mm.allocate();
-            trans->acquire();
+            trans = mm.allocate();   // ^searches in the pool for an available Payload and asigns it, if not any, then create one
+            trans->acquire();     // ^increases the counter of used Payload in One
 
+                                        //^ vvvvvv Initializes package
             trans->set_command(cmd);
             trans->set_address(adr);
             trans->set_data_ptr(reinterpret_cast<unsigned char*>(&data[i%16]));
@@ -100,18 +101,18 @@ class Initiator: public sc_module, public tlm::tlm_bw_transport_if<>
             trans->set_streaming_width(4);
             trans->set_byte_enable_ptr(0);
             trans->set_dmi_allowed(false);
-            trans->set_response_status(tlm::TLM_INCOMPLETE_RESPONSE);
+            trans->set_response_status(tlm::TLM_INCOMPLETE_RESPONSE);   // ^set INcomplete_response as default
 
             // Initiator must follow the BEGIN_REQ/END_REQ exclusion rule:
-            if (requestInProgress)
+            if (requestInProgress)   // ^back pressure: If already working in something, then wait until is done
             {
                 wait(endRequest);
             }
-            requestInProgress = trans;
-            phase = tlm::BEGIN_REQ;
+            requestInProgress = trans;   // ^since i WAS not working on anything, I can START working on something else
+            phase = tlm::BEGIN_REQ;     // ^set phase for starting first step of [1.0] 
 
             // Timing annot. models processing time of initiator prior to call
-            delay = randomDelay();
+            delay = randomDelay();  
 
             cout << "\033[1;31m"
                  << "(I) @"  << setfill(' ') << setw(12) << sc_time_stamp()
@@ -124,15 +125,15 @@ class Initiator: public sc_module, public tlm::tlm_bw_transport_if<>
             tlm::tlm_sync_enum status;
 
             // Call [1.0]:
-            status = socket->nb_transport_fw( *trans, phase, delay );
+            status = socket->nb_transport_fw( *trans, phase, delay );   //^ref Chap 5 SS.9
 
             // Check value returned from nb_transport_fw
-            if (status == tlm::TLM_UPDATED) // [2.0] or [4.0]
+            if (status == tlm::TLM_UPDATED) // [2.0] or [4.0]  //^EXEPTION not necesary for 4 step handshake
             {
                 // The timing annotation must be honored
                 peq.notify(*trans, phase, delay);
             }
-            else if (status == tlm::TLM_COMPLETED) // [3.0]
+            else if (status == tlm::TLM_COMPLETED) // [3.0]  
             {
                 // The completion of the transaction
                 // necessarily ends the BEGIN_REQ phase
@@ -146,7 +147,7 @@ class Initiator: public sc_module, public tlm::tlm_bw_transport_if<>
             }
             // In the case of TLM_ACCEPTED [1.1] we
             // will recv. a BW call in the future [1.2, 1.4]
-
+            //^If I get TLM_ACCEPTED then do nothing, wait random, Initiator is waiting for END_REQ of Target
             wait(randomDelay());
         }
     }
@@ -174,23 +175,25 @@ class Initiator: public sc_module, public tlm::tlm_bw_transport_if<>
                 || (&trans == requestInProgress && phase == tlm::BEGIN_RESP))
         {
             // The end of the BEGIN_REQ phase
-            requestInProgress = 0;
+            requestInProgress = 0;   //^request is done
             endRequest.notify(); // wake up suspended main process
+                                //^notify waitings from backpressure
         }
         else if (phase == tlm::BEGIN_REQ || phase == tlm::END_RESP)
         {
             SC_REPORT_FATAL(name(), "Illegal transaction phase received");
         }
 
-        if (phase == tlm::BEGIN_RESP) // [1.4]
+        if (phase == tlm::BEGIN_RESP) //^ [1.4] step 3
         {
-            checkTransaction(trans);
+            checkTransaction(trans);  //^Verify my package has no error, unpack it and print
 
             // Send final phase transition to target
             tlm::tlm_phase fw_phase = tlm::END_RESP;
             sc_time delay = sc_time(randomDelay());
             // [1.6]
-            socket->nb_transport_fw( trans, fw_phase, delay ); // Ignore return
+            socket->nb_transport_fw( trans, fw_phase, delay ); //^^Starting step 4 jump to target line 84
+                                                              //^ Ignore return TLM_COMPLETE
 
             // Allow the memory manager to free the transaction object
             trans.release();

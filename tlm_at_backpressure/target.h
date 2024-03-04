@@ -129,7 +129,7 @@ class Target: public sc_module, public tlm::tlm_fw_transport_if<>
             // Increment the transaction reference count
             trans.acquire();
 
-            if (numberOfTransactions < bufferSize) // Input buffersize
+            if (numberOfTransactions < bufferSize) // Input buffersize    //^difference to original target in line 113
             {
                 sendEndRequest(trans); // [1.2]
                 // HINT: instead of [1.2] we can call also [4.1] (ie. [1.4])
@@ -157,9 +157,9 @@ class Target: public sc_module, public tlm::tlm_fw_transport_if<>
 
             // Target itself is now clear to issue the next BEGIN_RESP
             responseInProgress = false;
-            if (responseQueue.size() > 0)
+            if (responseQueue.size() > 0)    //^difference to original Target line 144
             {
-                tlm::tlm_generic_payload * next = responseQueue.front();
+                tlm::tlm_generic_payload * next = responseQueue.front();   //^line 146 in original Target
                 responseQueue.pop();
                 sendResponse(*next);
             }
@@ -171,7 +171,7 @@ class Target: public sc_module, public tlm::tlm_fw_transport_if<>
                 endRequestPending = 0;
             }
         }
-        else if(phase == INTERNAL)
+        else if(phase == INTERNAL)    //^Example in video
         {
             // Execute the read or write commands
             executeTransaction(trans);
