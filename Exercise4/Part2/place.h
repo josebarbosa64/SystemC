@@ -9,13 +9,13 @@ class placeInterface : public sc_interface {   //^Father class
 
     public:
     //----Task 1 and 2
-
     virtual void addTokens(unsigned int n) = 0;
     virtual void removeTokens(unsigned int n) = 0;
     virtual unsigned int testTokens() = 0;
     
 };
 
+//------Task 1 and 2
 class placeChannel: public placeInterface  //^Regular child class, not SystemC module
 {
     public:

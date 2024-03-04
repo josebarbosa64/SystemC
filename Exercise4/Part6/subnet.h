@@ -37,16 +37,17 @@ SC_MODULE(subnet)
     transition<1,1,1> ACT;
     transition<1,1> RD, PRE, WR;
 
-
     SC_CTOR(subnet): ACT("ACT"), RD("RD"), PRE("PRE"), WR("WR"), ACTIVE(0)
     {
+
         ACT.inhibitors.bind(ACTIVE);
         ACT.out.bind(ACTIVE);
         RD.in.bind(ACTIVE);
         RD.out.bind(ACTIVE);
-        PRE.in.bind(ACTIVE);
         WR.in.bind(ACTIVE);
         WR.out.bind(ACTIVE);
+        PRE.in.bind(ACTIVE);
+
     }
 };
 
