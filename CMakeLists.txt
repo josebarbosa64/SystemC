@@ -68,7 +68,7 @@ add_subdirectory(Exercise5)
 add_subdirectory(Exercise4/Part1)
 add_subdirectory(Exercise4/Part2_JB)
 add_subdirectory(Exercise4/Part4_JB)
-
+add_subdirectory(Exercise4/Part6_JB)
 add_subdirectory(Exercise6)
 add_subdirectory(Exercise6/Part1)
 add_subdirectory(Exercise6/Part2)
