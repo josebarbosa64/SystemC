@@ -56,4 +56,21 @@ SC_MODULE (rslatch2)
     }
 };
 
-
+//template with method
+SC_MODULE(rslatch)
+{
+sc_in<bool> S;
+sc_in<bool> R;
+sc_out<bool> Q;
+sc_out<bool> N;
+SC_CTOR(rslatch) : S("S"), R("R"), Q("Q"), N("N")
+{
+SC_METHOD(process);
+sensitive << S << R << Q << N;
+}
+void process()
+{
+Q.write(!(R.read()||N.read())); // NOR Gate
+N.write(!(S.read()||Q.read())); // NOR Gate
+}
+};
