@@ -94,3 +94,20 @@ N.write(!(S.read()||Q.read())); // Nor Gate
 }
 }
 };
+
+//template waveform tracing
+int sc_main ()
+{
+clockGenerator g("clock_1GHz", sc_time(1,SC_NS));
+sc_signal<bool> clk;
+// Bind Signals
+g.clk.bind(clk);
+// Setup Waveform Tracing:
+sc_trace_file *wf = sc_create_vcd_trace_file("trace");
+sc_trace(wf, clk, "clk");
+// Start Simulation
+sc_start(10, SC_NS);
+// Close Trace File:
+sc_close_vcd_trace_file(wf);
+return 0;
+}
