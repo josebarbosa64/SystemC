@@ -74,3 +74,23 @@ Q.write(!(R.read()||N.read())); // NOR Gate
 N.write(!(S.read()||Q.read())); // NOR Gate
 }
 };
+
+//template with thread
+#include "systemc.h"
+SC_MODULE(rslatch) {
+sc_in<bool> S;
+sc_in<bool> R;
+sc_out<bool> Q;
+sc_out<bool> N;
+SC_CTOR(rslatch) : S("S"), R("R"), Q("Q"), N("N") {
+SC_THREAD(process);
+sensitive << S << R << Q << N;
+}
+void process() {
+while(true) {
+wait();
+Q.write(!(R.read()||N.read())); // Nor Gate
+N.write(!(S.read()||Q.read())); // Nor Gate
+}
+}
+};
