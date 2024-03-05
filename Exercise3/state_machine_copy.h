@@ -14,8 +14,9 @@ SC_MODULE(state_machine_copy){
     char r;
     int c = 0;
 
-    SC_HAS_PROCESS(state_machine_copy);   
+    SC_HAS_PROCESS(state_machine_copy);   //^ constructor
     state_machine_copy(const sc_module_name &name);
+
     void process();
 
 };

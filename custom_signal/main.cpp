@@ -39,7 +39,8 @@ using namespace std;
 
 SC_MODULE(PRODUCER)
 {
-    sc_port< Signal<int> > master;
+    //sc_port< Signal<int> > master;
+    sc_port< SignalInterface<int> > master;
 
     SC_CTOR(PRODUCER)
     {
@@ -58,8 +59,8 @@ SC_MODULE(PRODUCER)
 
 SC_MODULE(CONSUMER)
 {
-    sc_port< Signal<int> > slave;
-
+    //sc_port< Signal<int> > slave;
+    sc_port< SignalInterface<int> >slave;
     SC_CTOR(CONSUMER)
     {
         SC_METHOD(process);

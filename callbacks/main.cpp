@@ -44,19 +44,21 @@ SC_MODULE(module)
 
     SC_CTOR(module)
     {
+        SC_THREAD(process);
+        sensitive << clk.pos();
     }
 
     void process()
     {
         wait(5);
+        cout << "process" << endl;
         sc_stop();
     }
 
     void before_end_of_elaboration()
     {
         cout << "before_end_of_elaboration" << endl;
-        SC_THREAD(process);
-        sensitive << clk.pos();
+        
     }
 
     void end_of_elaboration()

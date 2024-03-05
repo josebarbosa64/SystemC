@@ -39,7 +39,7 @@ void consumer::process()
     while(true)  //^a thread allways go inside a while true
     {
         // Blocking read, i.e. an implicit wait is called
-        unsigned int value = fifo_port->read();
+        unsigned int value = fifo_port->read();  //^if I try to read but it is empty, then an implicit wait is called
         std::cout << "@" << sc_time_stamp()
                   << " CONSUMER: Consumed " << value << std::endl;
         wait(); // Wait for next clock

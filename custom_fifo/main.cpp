@@ -37,8 +37,8 @@
 
 using namespace std;
 
-template <class T>
-class SimpleFIFOInterface : public sc_interface
+template <class T> //^templated
+class SimpleFIFOInterface : public sc_interface //^Interface just virtual functions
 {
     public:
     virtual T read() = 0;
@@ -51,7 +51,7 @@ class SimpleFIFOInterface : public sc_interface
 };
 
 template <class T> //^ the FIFO memory can store a object of the class T , see instation in the main
-class SimpleFIFO : public SimpleFIFOInterface<T>
+class SimpleFIFO : public SimpleFIFOInterface<T> , public sc_prim_channel//^channel 
 {
     private:
     std::queue<T> fifo; //^memory 
@@ -66,7 +66,7 @@ class SimpleFIFO : public SimpleFIFOInterface<T>
 
     T read()
     {
-        if(fifo.empty() == true)
+        if(fifo.empty() == true) //^if empty , wait
         {
             std::cout << "Wait for Write" << std::endl;
             wait(writtenEvent); //^wait until something is written
@@ -84,7 +84,7 @@ class SimpleFIFO : public SimpleFIFOInterface<T>
             std::cout << "Wait for Read" << std::endl; //^it is full,, it has to wait until an element is read.
             wait(readEvent);
         }
-        fifo.push(d);
+        fifo.push(d); //^add at the bag
         writtenEvent.notify(SC_ZERO_TIME);
     }
 
@@ -104,10 +104,10 @@ class SimpleFIFO : public SimpleFIFOInterface<T>
     }
 };
 
-SC_MODULE(PRODUCER) //^ module of class c
+SC_MODULE(PRODUCER) //^ module of class System c
 {
-    sc_port< SimpleFIFOInterface<int> > master; //^take from INterface...not from channel.... this connection makes the sc_module have access to the function implemented in channel
-
+    sc_port< SimpleFIFOInterface<int> > master; //^take from Interface...not from channel.... this connection makes the sc_module have access to the function implemented in channel
+    
 
     SC_CTOR(PRODUCER)
     {
@@ -119,7 +119,8 @@ SC_MODULE(PRODUCER) //^ module of class c
         while(true)
         {
             wait(1,SC_NS); //^write something each 1 NS
-            master->write(10);  //^since this module is connected to the channel.. it can use the funcitions implemented in channel
+            master->write(10);  //^since this module is connected to the channel.. it can use the funcitions implemented in channel using vitual function since
+                            //^this module has a port of the INterface and the interface has only virtual functions
             std::cout << "@" << sc_time_stamp() << " Write: 10 ";
             master->printFIFO();
         }
@@ -133,17 +134,19 @@ SC_MODULE(CONSUMER)
     SC_CTOR(CONSUMER)
     {
         SC_THREAD(process);
-        //sensitive << slave;  //^ each time something changes in channel.. I want to print nothing chances
     }
-
+   
+   
     void process()
     {
         while(true)
         {
             wait(4,SC_NS); //^read each 4 NS
+            
             std::cout << "@" << sc_time_stamp() << " Read : "
                       << slave->read() << " ";
             slave->printFIFO();
+            
         }
     }
 };
@@ -155,7 +158,7 @@ int sc_main(int __attribute__((unused)) argc,
     CONSUMER con1("con1");
     SimpleFIFO<int> channel(4); //^since the class is templated I need to specify the tipo of object I want to store in the fifo 
                         //^ 4= size of fifo, see constructor
-    sc_signal<int> foo;
+    
 
     pro1.master.bind(channel);
     con1.slave.bind(channel);

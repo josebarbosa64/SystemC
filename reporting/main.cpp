@@ -47,15 +47,16 @@ SC_MODULE(module)
 
         sc_assert(condition1 == true && condition2 == true);
 
-        SC_REPORT_INFO("main","Report Info...");
-        SC_REPORT_WARNING("main","Report Warning...");
+        SC_REPORT_INFO("main","Report Info...");  //^ just to print an message general information
+        SC_REPORT_WARNING("main","Report Warning..."); //^ just to print an message warning 
+
         try{
-            SC_REPORT_ERROR("main","Report Error...");
+            SC_REPORT_ERROR("main","Report Error...");  //^trigger  try analices the condition and if it is fatal--> don't stop but exceutes the catch condition
         }
-        catch(sc_exception e){
+        catch(sc_exception e){ //^if the error is the one espcified here excetu this part
             std::cout << "do some handling for " << e.what() << std::endl;
         }
-        SC_REPORT_FATAL("main","Report Error and Stop...");
+        SC_REPORT_FATAL("main","Report Error and Stop..."); //^ stop the program
     }
 };
 

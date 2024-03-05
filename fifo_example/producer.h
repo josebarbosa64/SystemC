@@ -41,10 +41,12 @@
 SC_MODULE(producer)
 {
   public:
+  
 
     sc_in<bool> clk;
     // Thats the long way of writing it:
-    sc_port< sc_fifo_out_if< unsigned int > > fifo_port;
+    sc_port< sc_fifo_out_if< unsigned int > > fifo_port;  //^equivalent of //sc_fifo_out<unsigned int> fifo_port;
+    //sc_fifo_out<unsigned int> fifo_port;
     unsigned int counter;
 
     SC_CTOR(producer) : counter(1), clk("clk"), fifo_port("fifo_out")

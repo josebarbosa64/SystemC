@@ -53,6 +53,44 @@ SC_MODULE(rslatch)
     }
 };
 
+
+
+SC_MODULE (nand)
+{
+    sc_in<bool> a;
+    sc_in<bool> b;
+    sc_out<bool> c;
+    SC_CTOR (nand):a("a"),b("b"),c("c")
+    {
+      SC_METHOD (process);
+      sensitive << a << b;
+    }
+    void process()
+    {
+      c.write(!(a.read() && b.read()));
+    }
+};
+
+
+SC_MODULE (rslatch2)
+{
+    sc_in<bool> S;
+    sc_in<bool> R;
+    sc_out<bool> N;
+    sc_out<bool> Q;
+    nand n1, n2;
+    SC_CTOR (rslatch2):S("S"),R("R"),N("N"),Q("Q"), n1("n1"),n2("n2")
+    {
+        n1.a.bind(S);
+        n1.b.bind(Q);
+        n1.c.bind(N);
+
+        n2.a.bind(N);
+        n2.b.bind(R);
+        n2.c.bind(Q);
+    }
+};
+
 SC_MODULE(toplevel)
 {
     sc_signal<bool> Ssig;
@@ -60,7 +98,7 @@ SC_MODULE(toplevel)
     sc_signal<bool> Qsig;
     sc_signal<bool> Nsig;
 
-    rslatch rs;
+    rslatch2 rs;
     sc_time currentTime;
     unsigned long long currentDelta;
 
@@ -75,9 +113,9 @@ SC_MODULE(toplevel)
 
         std::cout << "\nS=0, R=1, Q=0, N=1\n" << std::endl;
         Ssig.write(false); // initial values
-        Rsig.write(true);
+        Rsig.write(false);
         Qsig.write(false);
-        Nsig.write(true);
+        Nsig.write(false);
 
         currentTime = SC_ZERO_TIME;
         currentDelta = sc_delta_count();

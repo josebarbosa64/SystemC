@@ -44,7 +44,7 @@ SC_MODULE(consumer)
 
     sc_in<bool> clk;
     // Thats the short way of writing it:
-    sc_fifo_in<unsigned int> fifo_port;
+    sc_fifo_in<unsigned int> fifo_port; //^ port of input of the systemC FIFO
 
     SC_CTOR(consumer) : clk("clk"), fifo_port("fifo_in")
     {

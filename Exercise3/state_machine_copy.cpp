@@ -4,7 +4,7 @@
 #include "state_machine_copy.h"
 
 
-state_machine_copy :: state_machine_copy(const sc_module_name &name): sc_module(name),input("input"), clk("clk") {
+state_machine_copy :: state_machine_copy(const sc_module_name &name): sc_module(name),input("input"), clk("clk") { //^constructor
 
    
 

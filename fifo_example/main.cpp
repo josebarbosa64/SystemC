@@ -50,7 +50,7 @@ int sc_main(int __attribute__((unused)) argc,
     consumer c("consumer");
 
     // Setup communication channel:
-    sc_fifo<unsigned int> channel(4);
+    sc_fifo<unsigned int> channel(4);//^standar
 
     // Bind Signals:
     p.clk(clk1);

@@ -43,12 +43,28 @@ SC_MODULE(module)
     //sc_port<sc_fifo_out_if<int> > port1;
     //sc_port<sc_fifo_out_if<int> > port2;
     //sc_port<sc_fifo_out_if<int> > port3;
-
-    sc_port<sc_fifo_out_if<int> > port[N];
+    sc_port<sc_fifo_out_if<int>,0, SC_ZERO_OR_MORE_BOUND> port;  //^Dynamic multiport
+    //sc_port<sc_fifo_out_if<int> > port[N];
+    //sc_fifo_out< int> port[N];
 
     SC_CTOR(module)
     {
-        SC_THREAD(process);
+        SC_THREAD(processDynamic);
+    }
+
+     void processDynamic() //dynamic
+    {
+        wait(SC_ZERO_TIME);
+
+        for(int i=0; i < port.size(); i++)
+        {
+           port[i]->write(2);
+           std::cout << this->name()
+                     << ": Write to port " << i << std::endl;
+           wait(1, SC_NS);
+        }
+
+        std::cout << flush;
     }
 
     void process()
@@ -71,18 +87,28 @@ SC_MODULE(module)
 int sc_main(int __attribute__((unused)) argc,
             char __attribute__((unused)) *argv[])
 {
-    module<3> m("m");
+    module<1> m("m");
+    sc_fifo<int> f1, f2, f3, f4;
+    //^Dynamic , when we assign the ports it is done dynamamically
+
+    m.port.bind(f1);
+    m.port.bind(f2);
+    m.port.bind(f3);
+
+    /*
+    module<3> m("m"); //^CH 3 SL39
     sc_fifo<int> f1, f2, f3, f4;
 
     m.port[0].bind(f1);
     m.port[1].bind(f2);
     m.port[2].bind(f3);
+    */
 
-    module<1> n("n");
-    module<1> o("o");
+    //module<1> n("n");
+    //module<1> o("o");
 
-    n.port[0].bind(f4);
-    o.port[0].bind(f4);
+    //n.port[0].bind(f4);  //^ch3 sl: 41
+    //o.port[0].bind(f4);
 
     sc_start();
     return 0;
