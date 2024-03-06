@@ -171,6 +171,7 @@ void processor::processTrace()
 		trans.set_data_length(4);
 		trans.set_command(read ? tlm::TLM_READ_COMMAND : tlm::TLM_WRITE_COMMAND);
 		trans.set_data_ptr(data);
+		
 		iSocket->b_transport(trans, delay);
 
 		wait(delay);

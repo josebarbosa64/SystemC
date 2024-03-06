@@ -37,19 +37,18 @@
 
 using namespace std;
 
-class exampleInitiator: sc_module, tlm::tlm_bw_transport_if<>
+class exampleInitiator: public sc_module, public tlm::tlm_bw_transport_if<>
 {
     public:
-    tlm::tlm_initiator_socket<> iSocket;
+    tlm::tlm_initiator_socket<> iSocket;    //^Initiator socket
     SC_CTOR(exampleInitiator) : iSocket("iSocket")
     {
-        iSocket.bind(*this);
+        iSocket.bind(*this);   //^Always when using a tlm socket
         SC_THREAD(process);
     }
 
     // Dummy method:
-    void invalidate_direct_mem_ptr(sc_dt::uint64 start_range,
-                                   sc_dt::uint64 end_range)
+    void invalidate_direct_mem_ptr(sc_dt::uint64 start_range, sc_dt::uint64 end_range)
     {
         SC_REPORT_FATAL(this->name(),"invalidate_direct_mem_ptr not implement");
     }
@@ -69,17 +68,18 @@ class exampleInitiator: sc_module, tlm::tlm_bw_transport_if<>
     {
         // Write to memory:
         for (int i = 0; i < 4; i++) {
-            tlm::tlm_generic_payload trans;
-            unsigned char data = rand();
-            trans.set_address(i);
+            tlm::tlm_generic_payload trans;   //^Create SystemC payload
+            unsigned char data = rand();   //^Generate random data
+            trans.set_address(i);    //^ VVVVVVVVVVVVVV Set payload
             trans.set_data_length(1);
             trans.set_streaming_width(1);
             trans.set_command(tlm::TLM_WRITE_COMMAND);
             trans.set_data_ptr(&data);
             trans.set_response_status( tlm::TLM_INCOMPLETE_RESPONSE );
+
             sc_time delay = sc_time(0, SC_NS);
 
-            iSocket->b_transport(trans, delay);
+            iSocket->b_transport(trans, delay);   //^Send transaction by calling function in the Target
 
             if ( trans.is_response_error() )
               SC_REPORT_FATAL(name(), "Response error from b_transport");
@@ -91,7 +91,7 @@ class exampleInitiator: sc_module, tlm::tlm_bw_transport_if<>
         }
 
         // Read from memory:
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < 4; i++) {   //^Same as before but reading
             tlm::tlm_generic_payload trans;
             unsigned char data;
             trans.set_address(i);
@@ -115,28 +115,28 @@ class exampleInitiator: sc_module, tlm::tlm_bw_transport_if<>
     }
 };
 
-class exampleTarget : sc_module, tlm::tlm_fw_transport_if<>
+class exampleTarget : public sc_module, public tlm::tlm_fw_transport_if<>
 {
     private:
     unsigned char mem[1024];
 
     public:
-    tlm::tlm_target_socket<> tSocket;
+    tlm::tlm_target_socket<> tSocket;   //^Create target socket
 
     SC_CTOR(exampleTarget) : tSocket("tSocket")
     {
-        tSocket.bind(*this);
+        tSocket.bind(*this);    //^Put always when using tlm sockets
     }
 
     void b_transport(tlm::tlm_generic_payload &trans, sc_time &delay)
     {
-        if (trans.get_address() >= 1024)
+        if (trans.get_address() >= 1024)   //^Check not outside of range
         {
              trans.set_response_status( tlm::TLM_ADDRESS_ERROR_RESPONSE );
              return;
         }
 
-        if (trans.get_data_length() != 1)
+        if (trans.get_data_length() != 1)  //^Check error
         {
              trans.set_response_status( tlm::TLM_BURST_ERROR_RESPONSE );
              return;

@@ -34,7 +34,7 @@
 #include <iostream>
 #include <systemc.h>
 #include <tlm.h>
-#include <tlm_utils/tlm_quantumkeeper.h>
+#include <tlm_utils/tlm_quantumkeeper.h>  //^Add to use quantum
 
 #define USEQK
 //#define LONG_RUN
@@ -46,7 +46,7 @@ class exampleInitiator: sc_module, tlm::tlm_bw_transport_if<>
 {
     private:
 #ifdef USEQK
-    tlm_utils::tlm_quantumkeeper quantumKeeper;
+    tlm_utils::tlm_quantumkeeper quantumKeeper;   //^Add quantumKeeper
 #endif
 
     public:
@@ -56,8 +56,8 @@ class exampleInitiator: sc_module, tlm::tlm_bw_transport_if<>
         iSocket.bind(*this);
         SC_THREAD(process);
 #ifdef USEQK
-        quantumKeeper.set_global_quantum(sc_time(10000,SC_NS)); // STATIC!
-        quantumKeeper.reset();
+        quantumKeeper.set_global_quantum(sc_time(10000,SC_NS)); //^Set time of quantum
+        quantumKeeper.reset();   //^Always
 #endif
     }
 
@@ -68,7 +68,7 @@ class exampleInitiator: sc_module, tlm::tlm_bw_transport_if<>
         for (int j = 0; j < 100000; j++)
 #endif
         for (int i = 0; i < 1024; i++) {
-            tlm::tlm_generic_payload trans;
+            tlm::tlm_generic_payload trans;  //^Create and set payload vvvvvvvvvv
             unsigned char data = rand();
             trans.set_address(i);
             trans.set_data_length(1);
@@ -77,7 +77,7 @@ class exampleInitiator: sc_module, tlm::tlm_bw_transport_if<>
             trans.set_data_ptr(&data);
             trans.set_response_status( tlm::TLM_INCOMPLETE_RESPONSE );
 #ifdef USEQK
-            sc_time delay = quantumKeeper.get_local_time();
+            sc_time delay = quantumKeeper.get_local_time();  //^Set delay
 #else
             sc_time delay = SC_ZERO_TIME;
 #endif

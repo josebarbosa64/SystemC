@@ -51,7 +51,7 @@ class MemoryManager : public tlm::tlm_mm_interface
     virtual gp* allocate();
     virtual void free(gp* payload);
 
-  private:
+  public:
     unsigned int numberOfAllocations;
     unsigned int numberOfFrees;
     std::vector<gp*> freePayloads;

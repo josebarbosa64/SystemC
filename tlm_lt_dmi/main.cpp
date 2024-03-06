@@ -85,17 +85,18 @@ class exampleInitiator: sc_module, tlm::tlm_bw_transport_if<>
             sc_time delay = sc_time(0, SC_NS);
 
 
-            // If we got an DMI hint and the DMI is allowed in this range
+            //^ If we got an DMI hint and the DMI is allowed in this range
             if ( dmi == true && i >= dmiData.get_start_address()
                              && i <= dmiData.get_end_address())
             {
                 if(trans.get_command() == tlm::TLM_READ_COMMAND
                         && dmiData.is_read_allowed())
                 {
+                    cout << "test1" << endl;
                     memcpy(
-                        &data,
-                        dmiData.get_dmi_ptr() + i - dmiData.get_start_address(),
-                        trans.get_data_length()
+                        &data,  //^Destination
+                        dmiData.get_dmi_ptr() + i - dmiData.get_start_address(),   //^Source
+                        trans.get_data_length()  //^Data length
                     );
 
                     delay += dmiData.get_read_latency();
@@ -199,7 +200,7 @@ class exampleTarget : sc_module, tlm::tlm_fw_transport_if<>
     bool get_direct_mem_ptr(tlm::tlm_generic_payload& trans,
                             tlm::tlm_dmi& dmi_data)
     {
-        std::cout << "get_direct_mem_ptr called" << std::endl;
+        std::cout << "get_direct_mem_ptr called" << std::endl;    //^Used for DMI, before it was a dummy function
         dmi_data.set_dmi_ptr(mem);
         dmi_data.set_start_address(0);
         dmi_data.set_end_address(511);

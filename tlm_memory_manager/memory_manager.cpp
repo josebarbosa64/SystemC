@@ -54,17 +54,17 @@ MemoryManager::~MemoryManager()
 
 gp* MemoryManager::allocate()
 {
-    if(freePayloads.empty()) {
+    if(freePayloads.empty()) {  //^If no payload free
         numberOfAllocations++;
-        return new gp(this);
-    } else {
+        return new gp(this);   //^Create new
+    } else {     //^If I do have free payloads
         gp* result = freePayloads.back();
         freePayloads.pop_back();
         return result;
     }
 }
 
-void MemoryManager::free(gp* payload)
+void MemoryManager::free(gp* payload)    //^Clean payload and add it to the free list, not destroy
 {
     payload->reset(); //clears all extensions
     freePayloads.push_back(payload);

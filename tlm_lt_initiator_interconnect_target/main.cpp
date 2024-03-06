@@ -37,7 +37,7 @@
 
 using namespace std;
 
-class exampleInitiator: sc_module, tlm::tlm_bw_transport_if<>
+class exampleInitiator: sc_module, tlm::tlm_bw_transport_if<>   //^Initiator same as tlm_lt_initiator_target
 {
     public:
     tlm::tlm_initiator_socket<> iSocket;
@@ -144,7 +144,7 @@ class exampleInitiator: sc_module, tlm::tlm_bw_transport_if<>
     }
 };
 
-class exampleTarget : sc_module, tlm::tlm_fw_transport_if<>
+class exampleTarget : sc_module, tlm::tlm_fw_transport_if<>  //^Same targe as in tlm_lt_initiator_target
 {
     private:
     unsigned char mem[512];
@@ -218,15 +218,15 @@ class exampleTarget : sc_module, tlm::tlm_fw_transport_if<>
 
 class exampleInterconnect : sc_module,
                             tlm::tlm_bw_transport_if<>,
-                            tlm::tlm_fw_transport_if<>
+                            tlm::tlm_fw_transport_if<>   //^Inherits from both Target and Initiator
 {
     public:
-    tlm::tlm_initiator_socket<> iSocket[2];
+    tlm::tlm_initiator_socket<> iSocket[2];  //^Two initiator socket and one target socket
     tlm::tlm_target_socket<> tSocket;
 
     SC_CTOR(exampleInterconnect)
     {
-        tSocket.bind(*this);
+        tSocket.bind(*this);    //^Put always
         iSocket[0].bind(*this);
         iSocket[1].bind(*this);
     }
@@ -238,12 +238,12 @@ class exampleInterconnect : sc_module,
 
         if(trans.get_address() < 512)
         {
-            iSocket[0]->b_transport(trans, delay);
+            iSocket[0]->b_transport(trans, delay);   //^Calls b_transport of target, that is the upper memory
         }
         else
         {
             // Correct Address:
-            trans.set_address(trans.get_address() - 512);
+            trans.set_address(trans.get_address() - 512);   //^Calls b_transport of target, that is the lower memory
             iSocket[1]->b_transport(trans, delay);
         }
     }

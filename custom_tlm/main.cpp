@@ -39,14 +39,14 @@ using namespace std;
 
 enum cmd {READ, WRITE};
 
-struct transaction
+struct transaction   //^This is going to be my package
 {
     unsigned int data;
     unsigned int addr;
     cmd command;
 };
 
-class transactionInterface : public sc_interface
+class transactionInterface : public sc_interface   //^Create interface as fully virtual
 {
     public:
     virtual void transport(transaction &trans) = 0;
@@ -88,7 +88,7 @@ SC_MODULE(PRODUCER)
     }
 };
 
-class CONSUMER : public sc_module, public transactionInterface
+class CONSUMER : public sc_module, public transactionInterface  //^my channel is called CONSUMER and also inherits sc_module since is an active channel
 {
     private:
     unsigned int memory[1024];
@@ -96,13 +96,13 @@ class CONSUMER : public sc_module, public transactionInterface
     public:
     SC_CTOR(CONSUMER)
     {
-        for(unsigned int i=0; i < 1024; i++)
+        for(unsigned int i=0; i < 1024; i++)  //^Fill memory with 0s
         {
             memory[i] = 0; // Initialize memory
         }
     }
 
-    void transport(transaction &trans)
+    void transport(transaction &trans)  //^Virtual fuction
     {
         if(trans.command == cmd::WRITE)
         {
@@ -118,8 +118,8 @@ class CONSUMER : public sc_module, public transactionInterface
 int sc_main(int __attribute__((unused)) argc,
             char __attribute__((unused)) *argv[])
 {
-    PRODUCER cpu("cpu");
-    CONSUMER mem("memory");
+    PRODUCER cpu("cpu");  //^module
+    CONSUMER mem("memory");  //^Channel
 
     cpu.master.bind(mem);
 
