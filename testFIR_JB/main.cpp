@@ -45,7 +45,7 @@ SC_MODULE(delay)
     {
         SC_THREAD(process);
         sensitive << clk.pos();
-        dont_initialize();
+        //dont_initialize();
     }
 
     void process()
@@ -74,7 +74,7 @@ SC_MODULE(mul)
     {
         SC_THREAD(process);
         sensitive << clk.pos();
-        dont_initialize();
+        //dont_initialize();
     }
 
     void process()
@@ -102,7 +102,8 @@ SC_MODULE(add)
     {
         SC_THREAD(process);
         sensitive << clk.pos();
-        dont_initialize();
+
+        //dont_initialize();
     }
 
     void process()
@@ -133,16 +134,20 @@ SC_MODULE(split)
 
     SC_CTOR(split) : out1("out1"), in("in"), out2("out2"),clk("clk")
     {
-        SC_METHOD(process);
+        SC_THREAD(process);
         sensitive << clk.pos();
         //dont_initialize();
     }
 
     void process()
     {
-        int a=in->read();
-        out1->write(a);
-        out2->write(a);
+        while(true)
+        {
+            int a=in->read();
+            out1->write(a);
+            out2->write(a);
+            wait();
+        }
         //cout<<"output slit "<<a<<endl;
         
     }
