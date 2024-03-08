@@ -54,6 +54,7 @@ DECLARE_EXTENDED_PHASE(INTERNAL);
 
 #define N 1024
 
+
 using namespace std;
 
 SC_MODULE(Initiator)
@@ -94,6 +95,7 @@ SC_MODULE(Initiator)
         // Do b_transports:
         for (int i = 0; i < N; i++)
         {
+  
             tlm::tlm_generic_payload trans;
             data[i % 16] = i;
             trans.set_address(rand()%N);
@@ -127,6 +129,7 @@ SC_MODULE(Initiator)
         // Do nb_transports:
         for (int i = 0; i < N; i++)
         {
+            
             int adr = rand()%N;
             tlm::tlm_command cmd = tlm::TLM_READ_COMMAND;
 

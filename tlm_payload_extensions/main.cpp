@@ -130,7 +130,7 @@ SC_MODULE(Interconnect)
 
         if(store)
         {
-            routingExtension* ext = new routingExtension(inPort, outPort);
+            routingExtension* ext = new routingExtension(inPort, outPort);   //^ Compared to multipassthrough_socket, here transaction list is stored in routingExtensions and before it was saved in a Map
             trans.set_auto_extension(ext);
         }
 
@@ -170,7 +170,7 @@ SC_MODULE(Interconnect)
         else if(phase == tlm::END_RESP)
         {
             // Adress was already modified in BEGIN_REQ phase:
-            routingExtension *ext = NULL;
+            routingExtension *ext = NULL;    //^ Diferent from multipasstrought_socket, here I get the information from the routingExtension, before ised to get it from the Map
             trans.get_extension(ext);
             outPort = ext->getOutputPortNumber();
             trans.release();
@@ -200,7 +200,7 @@ SC_MODULE(Interconnect)
                                                 tlm::tlm_phase& phase,
                                                 sc_time& delay )
     {
-        routingExtension *ext = NULL;
+        routingExtension *ext = NULL;   //^ Diferent from multipasstrought_socket, here I get the information from the routingExtension, before ised to get it from the Map
         trans.get_extension(ext);
         int inPort = ext->getInputPortNumber();
 

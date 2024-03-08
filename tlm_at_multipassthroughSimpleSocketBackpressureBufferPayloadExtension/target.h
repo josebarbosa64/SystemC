@@ -105,7 +105,7 @@ public:
             // Increment the transaction reference count
             trans.acquire();
 
-            if (numberOfTransactions < bufferSize) // Input buffersize
+            if (numberOfTransactions < bufferSize) //^ Input buffersize same as line 113 of Target of tlm_at_1
             {
                 sendEndRequest(trans); // [1.2]
                 // HINT: instead of [1.2] we can call also [4.1] (ie. [1.4])
