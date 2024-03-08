@@ -14,3 +14,8 @@ tlm_payload_extension ... Simple socket no dynamic for Ini and Targ, Simple sock
 tlm_at_multipassthroughSimpleSocketBackpressureBufferPayloadExtension  ... Initiator reads N time only
 
 
+Exercise2 ... Part1  NAND module (nand_main.cpp) -  XOR module using NAND (xor_main.cpp), Part3 debugging tracing and clock signal added to mon and stim to generate inputs.
+Exercise3 ...  State machine for detecting sequence of string, using stringInput and clock as inputs and printing whenever i reach the final state.
+Exercise4  .... Petrinet using custom interface/channel as Place and SC_MODULES as transitions. Part 1 create interface - chanel and module, Part 2 Transition module are now templated and dynamic indicating # of input and output, Part 4 now placeChannel is also templated indicatin input and output weights, Part 6 modify the template of the transitions to add inhibitors also dynamicly and create a subnet modeling the state of a memory and then putting two of the same ones toggether in a toplevel
+Exercise5 ...  State machine containing Add - Split and Delay using sc_fifo
+

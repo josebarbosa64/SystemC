@@ -15,6 +15,7 @@ SC_MODULE(transition){
 
     sc_port<placeInterface, N, SC_ALL_BOUND> in;  //^PlaceInterfaces is created as a vector of N elements as inputs
     sc_port<placeInterface, M, SC_ALL_BOUND> out;
+    sc_port<placeInterface> in[N];
 
     SC_CTOR(transition): in("in"), out("out"){}
 
