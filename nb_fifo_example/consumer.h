@@ -52,6 +52,7 @@ SC_MODULE(consumer)
         SC_METHOD(process);
         dont_initialize();
         sensitive << clk.pos();
+        //sensitive << fifo_port;
     }
 
   private:

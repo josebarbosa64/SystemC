@@ -103,6 +103,7 @@ SC_MODULE(add)
         SC_THREAD(process);
         sensitive << clk.pos();
 
+
         //dont_initialize();
     }
 
@@ -116,7 +117,7 @@ SC_MODULE(add)
             //cout<<"input1 sum "<<a<<endl;
             //cout<<"input2 sum "<<b<<endl;
             
-            cout << a+b << endl;
+            //cout <<"Blocks"<< a+b << endl;
             wait();
         }
         
@@ -221,6 +222,7 @@ private:
         while(true)
         {
             cout<<"start"<<endl;
+             wait();
             out.write(1);
             wait();
             out.write(2);
@@ -240,17 +242,99 @@ private:
         
     }
 };
+
+SC_MODULE(FIR)
+{
+    public:
+    sc_fifo<int> s1,s2,s3,s4,s5;
+    sc_in<int> input;
+
+    SC_CTOR(FIR):s1("s1"),s2("s2"),s3("s3"),s4("s4"), s5("s5"), input("input")
+    {
+        
+        s5.write(0);
+        SC_THREAD(split);
+        sensitive<<input;
+        dont_initialize();
+
+        
+    }
+
+    void split()
+    {
+       while(true)
+        {
+           
+
+            int a=input->read();
+            
+            
+            s1.write(a);
+            s3.write(a);
+           
+            
+           
+            delay();
+             mult1();
+            wait();
+            
+        }
+        //cout<<"output slit "<<a<<endl;
+        
+    }
+
+    void delay()
+    {
+        
+            s4.write(s3.read());
+            mult2();
+        
+        
+    }
+
+    void mult1()
+    {
+      
+            int a = s1.read();
+            
+            s2.write(1*a);
+            add();
+            
+    }
+
+    void mult2()
+    {
+            s5.write(1*s4.read());
+        
+    }
+
+    void add()
+    {
+            
+            cout<<s2.read()+ s5.read()<<endl;
+        
+    }
+
+    
+
+};
 int sc_main (int __attribute__((unused)) sc_argc,
              char __attribute__((unused)) *sc_argv[])
 {
-    sc_clock clock("Clk", 40, SC_NS, 0.5);
+    sc_clock clock("Clk", 20, SC_NS, 0.5);
     sc_signal<int> link;
    
     stim Stim1("Stimulus");
     toplevel t1("t1");
 
+    FIR f1("f1");
+
     Stim1.out(link);
     Stim1.clk(clock);
+
+
+    f1.input.bind(link);
+
 
     t1.input(link);
     t1.clk.bind(clock);

@@ -51,6 +51,7 @@ SC_MODULE(consumer)
         SC_THREAD(process);
         dont_initialize();
         sensitive << clk.pos(); //^ makes that it executes each time it gets a clk pos
+        
     }
 
   private:
