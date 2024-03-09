@@ -133,6 +133,7 @@ class BoolPort : public sc_port<SignalInterface<bool>>
 SC_MODULE(PRODUCER)
 {
     BoolPort master;
+    
 
     SC_CTOR(PRODUCER)
     {
