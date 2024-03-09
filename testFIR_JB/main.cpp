@@ -230,7 +230,7 @@ private:
         while(true)
         {
             cout<<"start"<<endl;
-             wait();
+            wait();
             out.write(1);
             wait();
             out.write(2);
