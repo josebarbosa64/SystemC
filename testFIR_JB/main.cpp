@@ -169,11 +169,12 @@ SC_MODULE(toplevel)
     mul<1> mul2;
     add add1;
     
-    sc_signal<int> s1;
-    sc_signal<int> s2;
-    sc_signal<int> s3;
-    sc_signal<int> s4;
-    sc_signal<int> s5;
+    sc_buffer<int> s1, s2, s3, s4, s5;
+    //sc_signal<int> s1;
+    //sc_signal<int> s2;
+    //sc_signal<int> s3;
+    //sc_signal<int> s4;
+    //sc_signal<int> s5;
     sc_in<int> input;
     sc_in<bool> clk;
     
@@ -233,15 +234,15 @@ private:
             wait();
             out.write(1);
             wait();
-            out.write(2);
+            out.write(1);
             wait();
-            out.write(3);
+            out.write(1);
             wait();
-            out.write(4);
+            out.write(1);
             wait();
-            out.write(5);
+            out.write(1);
             wait();
-            out.write(6);
+            out.write(1);
             wait();
             sc_stop();
 
@@ -283,7 +284,7 @@ SC_MODULE(FIR)
             
            
             delay();
-             mult1();
+            mult1();
             wait();
             
         }
@@ -330,7 +331,7 @@ int sc_main (int __attribute__((unused)) sc_argc,
              char __attribute__((unused)) *sc_argv[])
 {
     sc_clock clock("Clk", 20, SC_NS, 0.5);
-    sc_signal<int> link;
+    sc_buffer<int> link;
    
     stim Stim1("Stimulus");
     toplevel t1("t1");
