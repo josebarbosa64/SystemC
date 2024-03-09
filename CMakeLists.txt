@@ -31,6 +31,7 @@ add_subdirectory(dynamic_processes)
 add_subdirectory(event_finder)
 add_subdirectory(feedback_loop)
 add_subdirectory(fifo_example)
+
 add_subdirectory(interfaces_ports)
 add_subdirectory(kpn_artificial_deadlock)
 add_subdirectory(kpn_example)

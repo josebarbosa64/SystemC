@@ -43,6 +43,7 @@ class SignalInterface<bool> : public sc_interface
     virtual void write(bool) = 0;
     virtual const sc_event & getPosEvent() const = 0;
     virtual const sc_event & getNegEvent() const = 0;
+    
 };
 
 template<>
@@ -69,7 +70,7 @@ class Signal <bool> : public SignalInterface<bool>, public sc_prim_channel
     void write(bool d)
     {
         newValue = d;
-        if(newValue != currentValue)
+        if(newValue != currentValue) 
         {
             request_update(); // Call to SystemC Scheudler
         }
@@ -107,6 +108,8 @@ class Signal <bool> : public SignalInterface<bool>, public sc_prim_channel
         return posEvent;
     }
 
+    
+
 };
 
 class BoolPort : public sc_port<SignalInterface<bool>>
@@ -123,6 +126,8 @@ class BoolPort : public sc_port<SignalInterface<bool>>
         return *new sc_event_finder_t<SignalInterface<bool>>(
             *this, &SignalInterface<bool>::getNegEvent);
     }
+
+    
 };
 
 SC_MODULE(PRODUCER)

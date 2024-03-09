@@ -51,7 +51,7 @@ SC_MODULE(consumer)
         SC_THREAD(process);
         dont_initialize();
         sensitive << clk.pos();
-      //sensitive << fifo_port;
+      
         
     }
 

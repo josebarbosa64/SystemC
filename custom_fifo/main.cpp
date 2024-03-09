@@ -58,7 +58,7 @@ class SimpleFIFO : public SimpleFIFOInterface<T> , public sc_prim_channel//^chan
     sc_event writtenEvent;
     sc_event readEvent;
     unsigned int maxSize;
-
+    sc_event valueChangedEvent; //^added for the update
     public:
     SimpleFIFO(unsigned int size=16) : maxSize(size)  //^ in the construction it must recieve a number, size.
     {
@@ -86,8 +86,22 @@ class SimpleFIFO : public SimpleFIFOInterface<T> , public sc_prim_channel//^chan
         }
         fifo.push(d); //^add at the bag
         writtenEvent.notify(SC_ZERO_TIME);
+        
+        request_update(); //^^^ added to modify each time it is written
     }
 
+
+    void update() // MUST be implemented!
+    {
+        
+            valueChangedEvent.notify(SC_ZERO_TIME);
+        
+    }
+
+    const sc_event& default_event() const //^^ Should be!
+    {
+        return valueChangedEvent;
+    }
     void printFIFO()
     {
         unsigned int n = fifo.size();
@@ -134,6 +148,7 @@ SC_MODULE(CONSUMER)
     SC_CTOR(CONSUMER)
     {
         SC_THREAD(process);
+        sensitive<<slave;//^^add sensibility to the change of the input
     }
    
    
@@ -141,8 +156,8 @@ SC_MODULE(CONSUMER)
     {
         while(true)
         {
-            wait(4,SC_NS); //^read each 4 NS
-            
+            //wait(4,SC_NS); //^read each 4 NS
+            wait();
             std::cout << "@" << sc_time_stamp() << " Read : "
                       << slave->read() << " ";
             slave->printFIFO();
