@@ -174,6 +174,7 @@ SC_MODULE(toplevel)
     SC_CTOR(toplevel) : split1("split1"), clk("clk"),delay1("delay1"), mul1("mul1"), mul2("mul2"), add1("add1"), s1(4), s2(4),s3(4),s4(4),s5(5), input("input")
     {
         s5.write(0);
+        
 
         split1.clk.bind(clk);
         split1.in.bind(input);
@@ -244,9 +245,9 @@ int sc_main (int __attribute__((unused)) sc_argc,
 {
     sc_clock clock("Clk", 40, SC_NS, 0.5);
     sc_signal<int> link;
-    toplevel t1("t1");
+   
     stim Stim1("Stimulus");
-
+    toplevel t1("t1");
 
     Stim1.out(link);
     Stim1.clk(clock);
