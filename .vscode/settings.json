@@ -8,6 +8,7 @@
         "string_view": "cpp",
         "regex": "cpp",
         "functional": "cpp",
-        "*.tcc": "cpp"
+        "*.tcc": "cpp",
+        "random": "cpp"
     }
 }

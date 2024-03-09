@@ -202,8 +202,6 @@ int sc_main (int __attribute__((unused)) sc_argc,
 
     sc_clock clock("Clk", 20, SC_NS, 0.5);
 
-    sc_buffer<int> mid;
-
     stimul.out.bind(mid);
     stimul.clk.bind(clock);
     t1.in.bind(mid);
