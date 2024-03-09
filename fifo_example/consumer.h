@@ -37,25 +37,27 @@
 #include <systemc.h>
 #include <iostream>
 
-
 SC_MODULE(consumer)
 {
   public:
 
     sc_in<bool> clk;
     // Thats the short way of writing it:
-    sc_fifo_in<unsigned int> fifo_port; //^ port of input of the systemC FIFO
+    sc_fifo_in<unsigned int> fifo_port;
 
     SC_CTOR(consumer) : clk("clk"), fifo_port("fifo_in")
     {
+       std::cout<<"s"<<endl;
         SC_THREAD(process);
         dont_initialize();
-        sensitive << clk.pos(); //^ makes that it executes each time it gets a clk pos
+        sensitive << clk.pos();
+      //sensitive << fifo_port;
         
     }
 
   private:
     void process();
+   
 };
 
 #endif // CONSUMER_H

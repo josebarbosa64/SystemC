@@ -37,26 +37,27 @@ SC_MODULE(delay)
 {
     public:
     //sc_fifo_in<int> in;
-    sc_fifo_in<int> in;
-    sc_fifo_out<int> out;
+    sc_in<int> in;
+    sc_out<int> out;
     sc_in<bool> clk;
 
     SC_CTOR(delay) : in("in"), out("out"),clk("clk")
     {
         SC_THREAD(process);
-        sensitive << clk.pos();
-        //dont_initialize();
+        sensitive << in;
+        dont_initialize();
     }
 
     void process()
     {
         while(true)
         {
-            //cout << "delay" << endl;
-            out->write(in->read());
-
             
-            wait(); // wait for next clock
+            //cout << "delay" << endl;
+            out->write(in.read());
+
+             wait(); // wait for next clock
+           
 
         }
     }
@@ -66,28 +67,28 @@ template<int N=1>
 SC_MODULE(mul)
 {
     public:
-    sc_fifo_in<int> in;
-    sc_fifo_out<int> out;
+    sc_in<int> in;
+    sc_out<int> out;
     sc_in<bool> clk;
 
     SC_CTOR(mul) : in("in"), out("out")
     {
         SC_THREAD(process);
-        sensitive << clk.pos();
-        //dont_initialize();
+        sensitive << in;
+        dont_initialize();
     }
 
     void process()
     {
         while(true)
         {
-            
+             // wait for next clock
             //cout<<"mul"<<endl;
-            int a= in->read();
+            int a= in.read();
             //cout<<" input mult "<<a<<endl;
-            out->write(N * a);
-            wait(); // wait for next clock
-
+            out.write(N * a);
+            
+            wait();
         }
     }
 };
@@ -96,20 +97,21 @@ SC_MODULE(add)
 {
     public:
     sc_in<bool> clk;
-    sc_fifo_in<int> in1;
-    sc_fifo_in<int> in2;
+    sc_in<int> in1;
+    sc_in<int> in2;
     SC_CTOR(add) : in1("in1"), in2("in2"),clk("clk")
     {
         SC_THREAD(process);
-        sensitive << clk.pos();
+        sensitive << in1;
 
 
-        //dont_initialize();
+        dont_initialize();
     }
 
     void process()
     {   while(true)
         {
+            
             //cout<<"Add"<<endl;
             int a=in1->read() ;
             int b= in2->read() ;
@@ -117,8 +119,9 @@ SC_MODULE(add)
             //cout<<"input1 sum "<<a<<endl;
             //cout<<"input2 sum "<<b<<endl;
             
-            //cout <<"Blocks"<< a+b << endl;
+            cout <<"method1  " << a+b << endl;
             wait();
+            
         }
         
     }
@@ -130,13 +133,13 @@ SC_MODULE(split)
     
     sc_in<int> in;
     sc_in<bool> clk;
-    sc_fifo_out<int> out1;
-    sc_fifo_out<int> out2;
+    sc_out<int> out1;
+    sc_out<int> out2;
 
     SC_CTOR(split) : out1("out1"), in("in"), out2("out2"),clk("clk")
     {
         SC_THREAD(process);
-        sensitive << clk.pos();
+        sensitive << in;
         //dont_initialize();
     }
 
@@ -144,12 +147,15 @@ SC_MODULE(split)
     {
         while(true)
         {
-            int a=in->read();
-            out1->write(a);
-            out2->write(a);
+            
+            
             wait();
+            int a=in.read();
+            out1.write(a);
+            out2.write(a);
+            
         }
-        //cout<<"output slit "<<a<<endl;
+      
         
     }
 };
@@ -163,18 +169,18 @@ SC_MODULE(toplevel)
     mul<1> mul2;
     add add1;
     
-    sc_fifo<int> s1;
-    sc_fifo<int> s2;
-    sc_fifo<int> s3;
-    sc_fifo<int> s4;
-    sc_fifo<int> s5;
+    sc_signal<int> s1;
+    sc_signal<int> s2;
+    sc_signal<int> s3;
+    sc_signal<int> s4;
+    sc_signal<int> s5;
     sc_in<int> input;
     sc_in<bool> clk;
     
 
-    SC_CTOR(toplevel) : split1("split1"), clk("clk"),delay1("delay1"), mul1("mul1"), mul2("mul2"), add1("add1"), s1(4), s2(4),s3(4),s4(4),s5(5), input("input")
+    SC_CTOR(toplevel) : split1("split1"), clk("clk"),delay1("delay1"), mul1("mul1"), mul2("mul2"), add1("add1"), s1("s1"), s2("s2"),s3("s3"),s4("s4"),s5("s5"), input("input")
     {
-        s5.write(0);
+        //s5.write(0);
         
 
         split1.clk.bind(clk);
@@ -203,6 +209,8 @@ SC_MODULE(toplevel)
     }
 
     
+    
+
 };
 
 SC_MODULE(stim)
@@ -311,7 +319,7 @@ SC_MODULE(FIR)
     void add()
     {
             
-            cout<<s2.read()+ s5.read()<<endl;
+            cout<< "method2: "<<s2.read()+ s5.read()<<endl;
         
     }
 
