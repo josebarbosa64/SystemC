@@ -157,7 +157,7 @@ SC_MODULE(CONSUMER)
         while(true)
         {
             //wait(4,SC_NS); //^read each 4 NS
-            wait();
+            wait();  //^^ read each time a new input arrieves to the channel
             std::cout << "@" << sc_time_stamp() << " Read : "
                       << slave->read() << " ";
             slave->printFIFO();
