@@ -119,7 +119,7 @@ SC_MODULE(add)
             //cout<<"input1 sum "<<a<<endl;
             //cout<<"input2 sum "<<b<<endl;
             
-            cout <<"method1  " << a+b << endl;
+            //cout <<"method1  " << a+b << endl;
             wait();
             
         }
@@ -159,6 +159,8 @@ SC_MODULE(split)
         
     }
 };
+
+
 
 SC_MODULE(toplevel)
 {
@@ -234,15 +236,15 @@ private:
             wait();
             out.write(1);
             wait();
-            out.write(1);
+            out.write(2);
             wait();
-            out.write(1);
+            out.write(3);
             wait();
-            out.write(1);
+            out.write(4);
             wait();
-            out.write(1);
+            out.write(5);
             wait();
-            out.write(1);
+            out.write(6);
             wait();
             sc_stop();
 
@@ -252,19 +254,32 @@ private:
     }
 };
 
+
+//^EXAMPLE of FIR
 SC_MODULE(FIR)
 {
     public:
     sc_fifo<int> s1,s2,s3,s4,s5;
     sc_in<int> input;
 
-    SC_CTOR(FIR):s1("s1"),s2("s2"),s3("s3"),s4("s4"), s5("s5"), input("input")
+    SC_CTOR(FIR):s1(10),s2(10),s3(10),s4(10), s5(10), input("input")
     {
         
         s5.write(0);
         SC_THREAD(split);
         sensitive<<input;
         dont_initialize();
+        SC_THREAD(delay);
+        sensitive<<s3.data_written_event();
+
+        SC_THREAD(mult1);
+        sensitive<<s1.data_written_event();
+
+        SC_THREAD(mult2);
+        sensitive<<s4.data_written_event();
+
+        SC_THREAD(add);
+        sensitive<<s2.data_written_event()<<s5.data_written_event();
 
         
     }
@@ -283,8 +298,7 @@ SC_MODULE(FIR)
            
             
            
-            delay();
-            mult1();
+            
             wait();
             
         }
@@ -295,8 +309,11 @@ SC_MODULE(FIR)
     void delay()
     {
         
-            s4.write(s3.read());
-            mult2();
+            while(true)
+            {   wait();
+                s4.write(s3.read());
+            }
+           
         
         
     }
@@ -304,23 +321,35 @@ SC_MODULE(FIR)
     void mult1()
     {
       
-            int a = s1.read();
+            while (true)
+            {
+                wait();
+                int a = s1.read();
+                s2.write(1*a);
+            }
             
-            s2.write(1*a);
-            add();
             
     }
 
     void mult2()
-    {
+    {       
+        while(true)
+        {
+            wait();
             s5.write(1*s4.read());
+        }
+            
         
     }
 
     void add()
     {
+            while(true)
+            {
+                wait();
+                cout<< "method2: "<<s2.read()+ s5.read()<<endl;
+            }
             
-            cout<< "method2: "<<s2.read()+ s5.read()<<endl;
         
     }
 
