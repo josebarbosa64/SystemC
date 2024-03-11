@@ -99,7 +99,7 @@ class exampleInitiator: sc_module, tlm::tlm_bw_transport_if<>
                         trans.get_data_length()  //^Data length
                     );
 
-                    delay += dmiData.get_read_latency();
+                    delay += dmiData.get_read_latency(); 
                 }
                 else if(trans.get_command() == tlm::TLM_WRITE_COMMAND
                         && dmiData.is_write_allowed())

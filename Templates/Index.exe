@@ -5,7 +5,9 @@ template thread 78
 template waveform tracing 98
 Template TLM_LT Initiator + Dummy 116
 Template TLM_LT Target + Dummy 201
-Interconnect TLM_LT + Dummys 275
+Template Interconnect TLM_LT + Dummys 275
+
+Cap 5 vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 
 tlm_at_backpressure  ...  Modification of 4 phase handshake with a buffer size of 8, regular socket, no interconnect, Initiator randomly writes and read the buffer inside the target.
 tlm_simple_socket     ...  Simple socket no dynamic for Ini and Targ, simple socket no dynamic in vector template for Interconnect, With routing Map, 4 Phase handshake, Target has buffer for backpressure, Initiator writes N time then reads N times.
@@ -18,4 +20,33 @@ Exercise2 ... Part1  NAND module (nand_main.cpp) -  XOR module using NAND (xor_m
 Exercise3 ...  State machine for detecting sequence of string, using stringInput and clock as inputs and printing whenever i reach the final state.
 Exercise4  .... Petrinet using custom interface/channel as Place and SC_MODULES as transitions. Part 1 create interface - chanel and module, Part 2 Transition module are now templated and dynamic indicating # of input and output, Part 4 now placeChannel is also templated indicatin input and output weights, Part 6 modify the template of the transitions to add inhibitors also dynamicly and create a subnet modeling the state of a memory and then putting two of the same ones toggether in a toplevel
 Exercise5 ...  State machine containing Add - Split and Delay using sc_fifo
+
+Chap 4 vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+
+custom_tlm  ...  only one producer and one channel (no module consumer), producer writes and read 4 time to the channel.
+tlm_lt_initiator_target  ...  Create Initiator and Target using tlm_initiator/target_socket and inheriting tlm_bw/fw_transport_if (use dummies),  target writes and reads 4 times.
+tlm_lt_initiator_interconnect_target  ...  Same as top, but add an interconnect with one target Socket and 2 Initiator soket (One CPU and 2 Memories), Interconnect is using regulat tSocket and iSocket (vector).
+tlm_lt_initiator_interconnect_target_Simplesockets_InterconnectVector  ...  Same as top, but using now simple sockets for all (no dummies needed), Interconnect is not using dynamic sockets not tagged (vector).
+tlm_lt_initiator_interconnect_target_Simplesockets_InterconnectDynamic  ...  Same as top, but now interconnect uses simple multipassthrough dynamic sockets (no vector but is tagged by default).
+tlm_quantum_keeper  ...  2 initiators and 1 target, initiator is modiffied so that quantumKeeper is implemented, is using regulat target/initiator sockets
+tlm_lt_dmi  ...  Initiator, Innterconnec, Target, Target writes to memory and after the first transaction checks if the payload parameter DMI.activated ('??') is set to true, if yes, then uses DMI access.
+tlm_lt_debugg_transport  ...  One target and one Initiator, Initiator writes and reads 4 times and at the end of all transaction, I acces the debugg transport to read the final state of the memory. (same as lt_initiator_target but at the end I use debugg transport)
+
+Chap 3 vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+
+custom_fifo  ...  Producer, channel, consumer. Define interface with read and write virtual functions, then a channel that behaves like a fifo. Initiator writes every 1 ns and consumer reads every 4ns
+fifo_example  ...  Producer, channel, consumer. channel uses standar sc_fifo channel created in main.
+mutex_example  ...  How to use mutex
+custom_signal  ...  custom primitive channel with evaluate update mechanism. Create channel so that it send a signal when there is a change
+portarray  ...  create ports in vector way (no dynamic)
+multiport  ...  create ports in a dynamic way.
+event_finder  ...  crete an interface and channel with new events (expansion of custom_signal), now I can also make my modules sensitive por positive or negative changes of the channel (many other applicatins possibles)
+dynamic_processes  ...  a parent process calls a chind process.
+reporting  ...  many examples of report error handling 
+
+Chap 2 vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+
+delta_delay  ...  Example of rslatch but prints every delta cycle.
+feedback_loop  ... Example of rslatch but theres an infinite unstable loop.
+
 
