@@ -7,14 +7,14 @@ kpn::kpn(const sc_module_name &name): sc_module(name), a(10), b(10), c(10), d(10
     b.write(1);
     c.write(0);
     SC_THREAD(split);
-    sensitive<<b.data_written_event()<<b.data_read_event();
-    
+    sensitive<<b.data_written_event();
+    //for readin b.data_read_event();
     SC_THREAD(add);
-    sensitive<<c.data_written_event()<<c.data_read_event()<<a.data_written_event()<<a.data_read_event();
-    dont_initialize();          
+    sensitive<<c.data_written_event()<<a.data_written_event();
+    //dont_initialize();          
     SC_THREAD(delay);
-    sensitive<<d.data_written_event()<<d.data_read_event();
-    dont_initialize();          
+    sensitive<<d.data_written_event();
+    //dont_initialize();          
     
     
     
