@@ -47,7 +47,7 @@ SC_MODULE(module)
 
         sc_assert(condition1 == true && condition2 == true);
 
-        SC_REPORT_INFO("main","Report Info...");  //^ just to print an message general information
+        SC_REPORT_INFO("main","Report Infos...");  //^ just to print an message general information
         SC_REPORT_WARNING("main","Report Warning..."); //^ just to print an message warning 
 
         try{
@@ -111,12 +111,12 @@ int sc_main(int __attribute__((unused)) argc,
             char __attribute__((unused)) *argv[])
 {
     // Optional: Console otherwise ...
-    //sc_report_handler::set_log_file_name("output.log");
-    //sc_report_handler::set_actions(SC_INFO, SC_LOG);
-    //sc_report_handler::set_actions(SC_WARNING, SC_LOG);
+    sc_report_handler::set_log_file_name("output.log");
+    sc_report_handler::set_actions(SC_INFO, SC_LOG);
+    sc_report_handler::set_actions(SC_WARNING, SC_LOG);
 
     // Optional: Custom Report handler:
-    //sc_core::sc_report_handler::set_handler(reportHandler);
+    sc_core::sc_report_handler::set_handler(reportHandler);
 
     module m("m");
 
